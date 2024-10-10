@@ -26,7 +26,6 @@ if (!mongoUri) {
 
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
-  useCreateIndex: true,
   useUnifiedTopology: true,
 } as mongoose.ConnectOptions);
 
