@@ -1,5 +1,5 @@
 import { asyncHandler } from '@/middlewares/async-handler';
-import { User, UserSchema } from '@/models/user';
+import { User, ZodUserSchema } from '@/models/user';
 import { env } from '@/utils/env';
 import { validateRequest } from '@/utils/http';
 import express, { type Request, type Response } from 'express';
@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/signup', validateRequest(UserSchema), asyncHandler(async (req: Request, res: Response) => {
+router.post('/signup', validateRequest(ZodUserSchema), asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
@@ -23,7 +23,7 @@ router.post('/signup', validateRequest(UserSchema), asyncHandler(async (req: Req
 }));
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/signin', validateRequest(UserSchema), asyncHandler(async (req: Request, res: Response) => {
+router.post('/signin', validateRequest(ZodUserSchema), asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {

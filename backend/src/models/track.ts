@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { z } from 'zod';
 
 type IPoint = Document & {
   timestamp: number;
@@ -63,5 +64,23 @@ const trackSchema: Schema<ITrack> = new Schema({
   },
   locations: [pointSchema]
 });
+
+export const ZodTrackSchema = z.object({
+  userId: z.string(),
+  name: z.string(),
+  locations: z.array(z.object({
+    timestamp: z.number(),
+    coords: z.object({
+      latitude: z.number(),
+      longitude: z.number(),
+      altitude: z.number(),
+      accuracy: z.number(),
+      heading: z.number(),
+      speed: z.number()
+    })
+  })),
+});
+
+export type Track = z.infer<typeof ZodTrackSchema>;
 
 export const Track: Model<ITrack> = mongoose.model<ITrack>('Track', trackSchema);

@@ -24,10 +24,7 @@ if (!mongoUri) {
   throw new Error(`MongoURI was not supplied.`);
 }
 
-mongoose.connect(mongoUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-} as mongoose.ConnectOptions);
+mongoose.connect(mongoUri);
 
 mongoose.connection.on("connected", () => {
   console.log("Connected to mongo instance");

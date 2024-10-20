@@ -3,10 +3,10 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --clear-screen=false src/index.ts",
     "build": "tsup",
     "start": "node dist/index.js",
-    "db:init": "docker run --platform linux/amd64 --name mongo -d -p 27017:27017 -v /tmp/mongo-db:/data/db  mongo"
+    "db:init": "docker run --name mongo -d -p 27017:27017 -v /tmp/mongo-db:/data/db mongo:4.4.29"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.3",

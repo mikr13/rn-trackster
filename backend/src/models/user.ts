@@ -59,11 +59,11 @@ userSchema.methods.comparePassword = function (candidatePassword: string): Promi
   });
 };
 
-export const UserSchema = z.object({
+export const ZodUserSchema = z.object({
   email: z.string(),
   password: z.string(),
 });
 
-export type User = z.infer<typeof UserSchema>;
+export type User = z.infer<typeof ZodUserSchema>;
 
 export const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);

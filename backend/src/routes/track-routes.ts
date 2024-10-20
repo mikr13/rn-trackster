@@ -2,8 +2,9 @@ import express, { type Request, type Response } from 'express';
 
 import { asyncHandler } from '@/middlewares/async-handler';
 import { authCheck } from '@/middlewares/auth-check';
-import { Track } from '@/models/track';
+import { Track, ZodTrackSchema } from '@/models/track';
 import { type IUser } from '@/models/user';
+import { validateRequest } from '@/utils/http';
 
 const router = express.Router();
 
@@ -20,7 +21,7 @@ router.get('/tracks', asyncHandler(async (req: AuthenticatedRequest, res: Respon
 }));
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/tracks', asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+router.post('/tracks', validateRequest(ZodTrackSchema), asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   const { name, locations } = req.body;
 
   if (!name || !locations) {
