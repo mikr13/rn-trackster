@@ -1,4 +1,4 @@
 
 export type CustomError = Error & {
-    status?: number;
+  status?: number;
 }

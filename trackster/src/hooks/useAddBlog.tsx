@@ -1,5 +1,5 @@
 import { useStore } from '@/store';
-import type { Blog } from '@/types/blog';
+import type { Blog } from '@/types/auth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { randomUUID } from 'expo-crypto';

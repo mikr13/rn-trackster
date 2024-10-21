@@ -1,5 +1,5 @@
 import { useStore } from '@/store';
-import type { Blogs } from '@/types/blog';
+import type { Blogs } from '@/types/auth';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { client } from '../lib/axios';
