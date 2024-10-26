@@ -1,4 +1,3 @@
-import { asyncHandler } from '@/middlewares/async-handler';
 import { User, ZodUserSchema } from '@/models/user';
 import { env } from '@/utils/env';
 import { validateRequest } from '@/utils/http';
@@ -8,7 +7,7 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/signup', validateRequest(ZodUserSchema), asyncHandler(async (req: Request, res: Response) => {
+router.post('/signup', validateRequest(ZodUserSchema), async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
@@ -18,12 +17,12 @@ router.post('/signup', validateRequest(ZodUserSchema), asyncHandler(async (req: 
     const token = jwt.sign({ userId: user._id }, env.JWT_SECRET_KEY as string);
     res.send({ token });
   } catch (err: unknown) {
-    return res.status(422).send((err as Error).message);
+    return res.status(422).send({ error: (err as Error).message || 'Failed to signup' });
   }
-}));
+});
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/signin', validateRequest(ZodUserSchema), asyncHandler(async (req: Request, res: Response) => {
+router.post('/signin', validateRequest(ZodUserSchema), async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -40,8 +39,8 @@ router.post('/signin', validateRequest(ZodUserSchema), asyncHandler(async (req: 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY as string);
     res.send({ token });
   } catch (err) {
-    return res.status(422).send({ error: 'Invalid password or email' });
+    return res.status(422).send({ error: (err as Error).message || 'Invalid password or email' });
   }
-}));
+});
 
 export { router };

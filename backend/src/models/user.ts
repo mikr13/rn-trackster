@@ -59,9 +59,13 @@ userSchema.methods.comparePassword = function (candidatePassword: string): Promi
   });
 };
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$/gm;
+
 export const ZodUserSchema = z.object({
-  email: z.string(),
-  password: z.string(),
+  body: z.object({
+    email: z.string().email().min(5),
+    password: z.string().min(8).regex(passwordRegex, "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."),
+  })
 });
 
 export type User = z.infer<typeof ZodUserSchema>;

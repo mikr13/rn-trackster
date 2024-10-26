@@ -1,6 +1,5 @@
 import express, { type Request, type Response } from 'express';
 
-import { asyncHandler } from '@/middlewares/async-handler';
 import { authCheck } from '@/middlewares/auth-check';
 import { Track, ZodTrackSchema } from '@/models/track';
 import { type IUser } from '@/models/user';
@@ -15,13 +14,13 @@ type AuthenticatedRequest = Request & {
 }
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.get('/tracks', asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+router.get('/', async (req: AuthenticatedRequest, res: Response) => {
   const tracks = await Track.find({ userId: req.user._id });
   res.send(tracks);
-}));
+});
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/tracks', validateRequest(ZodTrackSchema), asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+router.post('/', validateRequest(ZodTrackSchema), async (req: AuthenticatedRequest, res: Response) => {
   const { name, locations } = req.body;
 
   if (!name || !locations) {
@@ -35,6 +34,6 @@ router.post('/tracks', validateRequest(ZodTrackSchema), asyncHandler(async (req:
   } catch (err: unknown) {
     res.status(422).send({ error: (err as Error).message });
   }
-}));
+});
 
 export { router };

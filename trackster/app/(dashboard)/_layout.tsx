@@ -1,11 +1,11 @@
-import { useStore } from '@/store';
+import { isAuthenticated } from '@/store';
 import { Redirect, Tabs } from 'expo-router';
 
 const Layout = () => {
-  const token = useStore(state => state.token);
+  const isAuth = isAuthenticated();
 
-  if (!token) {
-    return <Redirect href="sign-in" />;
+  if (!isAuth) {
+    return <Redirect href="sign-up" />;
   }
 
   return <Tabs screenOptions={{

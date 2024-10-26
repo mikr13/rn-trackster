@@ -1,4 +1,6 @@
-import type { Auth } from '@/types/auth';
+import { client } from '@/lib/axios';
+import type { Auth, SignUpData, SignUpState } from '@/types/auth';
+import { errorNotification } from '@/utils/toast';
 import { create, type StateCreator } from 'zustand';
 
 export type LoaderState = {
@@ -6,19 +8,36 @@ export type LoaderState = {
   setIsLoading: (isLoading: boolean) => void;
 }
 
-const createLoadSlice: StateCreator<LoaderState> = (set) => ({
+type Store = LoaderState & Auth;
+
+const createLoadSlice: StateCreator<Store, [], [], LoaderState> = (set) => ({
   isLoading: false,
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
 });
 
-const createAuthSlice: StateCreator<Auth> = (set) => ({
+const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
   token: null,
-  signIn: (token: string) => set({ token }),
+  signUp: async (data: SignUpData) => {
+    get().setIsLoading(true);
+    try {
+      const res = await client.post<SignUpState>('/auth/signup', data);
+      if (res.data.token) {
+        set({ token: res.data.token });
+      } else {
+        errorNotification(true, 'Failed to sign up', new Error(res.data.error));
+      }
+    } catch (e) {
+      errorNotification(true, 'Failed to sign up', e as unknown as Error);
+    }
+    get().setIsLoading(false);
+  },
+  signIn: async (token: string) => set({ token }),
   signOut: () => set({ token: null }),
 });
 
-
-export const useStore = create<LoaderState & Auth>()((...args) => ({
+export const useStore = create<Store>()((...args) => ({
   ...createLoadSlice(...args),
   ...createAuthSlice(...args),
 }))
+
+export const isAuthenticated = () => useStore.getState().token !== null;
