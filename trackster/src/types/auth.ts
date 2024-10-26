@@ -1,17 +1,19 @@
 
 export type Auth = {
   token: string | null;
-  signUp: (data: SignUpData) => Promise<boolean>;
-  signIn: (token: string) => void;
+  signUp: (data: SignInOrUpData) => Promise<boolean>;
+  signIn: (data: SignInOrUpData) => Promise<boolean>;
   signOut: () => void;
 }
 
-export type SignUpData = {
+export type SignInOrUpData = {
   email: string;
   password: string;
 }
 
-export type SignUpState = {
+export type SignInOrUpState = {
   token?: string;
   error?: string;
 };
+
+export const AUTH_TOKEN_KEY = 'auth-token';

@@ -6,7 +6,7 @@ export const useLoading = (isLoading: LoaderState["isLoading"], setIsLoading: Lo
   useEffect(() => {
     setIsLoading(isLoading);
     if (isLoading) {
-      loadNotification()
+      loadNotification();
     } else {
       hideToast();
     }

@@ -1,6 +1,7 @@
 import { client } from '@/lib/axios';
-import type { Auth, SignUpData, SignUpState } from '@/types/auth';
-import { errorNotification } from '@/utils/toast';
+import { AUTH_TOKEN_KEY, type Auth, type SignInOrUpData, type SignInOrUpState } from '@/types/auth';
+import { errorNotification, hideToast, loadNotification } from '@/utils/toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create, type StateCreator } from 'zustand';
 
 export type LoaderState = {
@@ -17,12 +18,13 @@ const createLoadSlice: StateCreator<Store, [], [], LoaderState> = (set) => ({
 
 const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
   token: null,
-  signUp: async (data: SignUpData) => {
-    get().setIsLoading(true);
+  signUp: async (data: SignInOrUpData) => {
+    loadNotification();
     try {
-      const res = await client.post<SignUpState>('/auth/signup', data);
+      const res = await client.post<SignInOrUpState>('/auth/signup', data);
       if (res.data.token) {
         set({ token: res.data.token });
+        await AsyncStorage.setItem(AUTH_TOKEN_KEY, res.data.token);
         return true;
       } else {
         errorNotification(true, 'Failed to sign up', new Error(res.data.error));
@@ -32,16 +34,53 @@ const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
       errorNotification(true, 'Failed to sign up', e as unknown as Error);
       return false;
     } finally {
-      get().setIsLoading(false);
+      hideToast();
     }
   },
-  signIn: async (token: string) => set({ token }),
-  signOut: () => set({ token: null }),
+  signIn: async (data: SignInOrUpData) => {
+    loadNotification();
+    try {
+      const res = await client.post<SignInOrUpState>('/auth/signin', data);
+      if (res.data.token) {
+        set({ token: res.data.token });
+        return true;
+      } else {
+        errorNotification(true, 'Failed to sign in', new Error(res.data.error));
+        return false;
+      }
+    } catch (e) {
+      errorNotification(true, 'Failed to sign in', e as unknown as Error);
+      return false;
+    } finally {
+      hideToast();
+    }
+  },
+  signOut: async () => {
+    await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+    set({ token: null });
+  },
 });
 
-export const useStore = create<Store>()((...args) => ({
-  ...createLoadSlice(...args),
-  ...createAuthSlice(...args),
-}))
+export const useStore = create<Store>()((...args) => {
+  const store = {
+    ...createLoadSlice(...args),
+    ...createAuthSlice(...args),
+  };
+
+  // Initialization function to get the token from AsyncStorage
+  const initializeStore = async () => {
+    const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
+    if (token) {
+      store.token = token;
+    } else {
+      store.token = null;
+    }
+  };
+
+  // Call the initialization function
+  initializeStore();
+
+  return store;
+});
 
 export const isAuthenticated = () => useStore.getState().token !== null;
