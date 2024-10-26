@@ -1,17 +1,13 @@
-import express, { type Request, type Response } from 'express';
+import express, { type Response } from 'express';
 
 import { authCheck } from '@/middlewares/auth-check';
 import { Track, ZodTrackSchema } from '@/models/track';
-import { type IUser } from '@/models/user';
+import type { AuthenticatedRequest } from '@/types/user';
 import { validateRequest } from '@/utils/http';
 
 const router = express.Router();
 
 router.use(authCheck);
-
-type AuthenticatedRequest = Request & {
-  user: IUser;
-}
 
 // @ts-expect-error: blud is wilding over here with middlewares
 router.get('/', async (req: AuthenticatedRequest, res: Response) => {
@@ -20,7 +16,12 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
 });
 
 // @ts-expect-error: blud is wilding over here with middlewares
-router.post('/', validateRequest(ZodTrackSchema), async (req: AuthenticatedRequest, res: Response) => {
+router.post('/', validateRequest(ZodTrackSchema), async (req: AuthenticatedRequest & {
+  body: {
+    name: Track['name'];
+    locations: Track['locations'];
+  };
+}, res: Response) => {
   const { name, locations } = req.body;
 
   if (!name || !locations) {

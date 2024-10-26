@@ -1,5 +1,5 @@
 import { client } from '@/lib/axios';
-import { AUTH_TOKEN_KEY, type Auth, type SignInOrUpData, type SignInOrUpState } from '@/types/auth';
+import { AUTH_TOKEN_KEY, type Auth, type ChangePasswordData, type SignInOrUpData, type SignInOrUpState } from '@/types/auth';
 import { errorNotification, hideToast, loadNotification } from '@/utils/toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create, type StateCreator } from 'zustand';
@@ -18,6 +18,28 @@ const createLoadSlice: StateCreator<Store, [], [], LoaderState> = (set) => ({
 
 const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
   token: null,
+  changePassword: async (data: ChangePasswordData) => {
+    loadNotification();
+    try {
+      const res = await client.post<SignInOrUpState>('/auth/change-password', data, {
+        headers: {
+          Authorization: `Bearer ${get().token}`,
+        },
+      });
+      if (res.data.token) {
+        set({ token: res.data.token });
+        await AsyncStorage.setItem(AUTH_TOKEN_KEY, res.data.token);
+        hideToast();
+        return true;
+      } else {
+        errorNotification(true, 'Failed to change password', new Error(res.data.error));
+        return false;
+      }
+    } catch (e) {
+      errorNotification(true, 'Failed to change password', e as unknown as Error);
+      return false;
+    }
+  },
   signUp: async (data: SignInOrUpData) => {
     loadNotification();
     try {

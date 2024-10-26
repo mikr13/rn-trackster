@@ -1,9 +1,15 @@
 
 export type Auth = {
   token: string | null;
+  changePassword: (data: ChangePasswordData) => Promise<boolean>;
   signUp: (data: SignInOrUpData) => Promise<boolean>;
   signIn: (data: SignInOrUpData) => Promise<boolean>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
+}
+
+export type ChangePasswordData = {
+  currentPassword: string;
+  newPassword: string;
 }
 
 export type SignInOrUpData = {
