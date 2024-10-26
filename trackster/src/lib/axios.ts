@@ -12,7 +12,7 @@ client.interceptors.response.use(
   error => {
     // Handle error globally
     const customError = {
-      message: error.response?.data?.message || 'An unexpected error occurred',
+      message: error.response?.data?.message || error.response?.data?.error || 'An unexpected error occurred',
       status: error.response?.status || 500,
     };
     return Promise.reject(customError);

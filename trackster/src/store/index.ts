@@ -25,6 +25,7 @@ const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
       if (res.data.token) {
         set({ token: res.data.token });
         await AsyncStorage.setItem(AUTH_TOKEN_KEY, res.data.token);
+        hideToast();
         return true;
       } else {
         errorNotification(true, 'Failed to sign up', new Error(res.data.error));
@@ -33,8 +34,6 @@ const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
     } catch (e) {
       errorNotification(true, 'Failed to sign up', e as unknown as Error);
       return false;
-    } finally {
-      hideToast();
     }
   },
   signIn: async (data: SignInOrUpData) => {
@@ -43,6 +42,8 @@ const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
       const res = await client.post<SignInOrUpState>('/auth/signin', data);
       if (res.data.token) {
         set({ token: res.data.token });
+        await AsyncStorage.setItem(AUTH_TOKEN_KEY, res.data.token);
+        hideToast();
         return true;
       } else {
         errorNotification(true, 'Failed to sign in', new Error(res.data.error));
@@ -51,8 +52,6 @@ const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
     } catch (e) {
       errorNotification(true, 'Failed to sign in', e as unknown as Error);
       return false;
-    } finally {
-      hideToast();
     }
   },
   signOut: async () => {
