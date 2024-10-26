@@ -8,6 +8,7 @@ import { useDataFetching } from '@/hooks/useDataFetching';
 import { useStore } from '@/store';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import z from 'zod';
@@ -59,7 +60,13 @@ const SignUpScreen = () => {
         email: data.email,
         password: data.password,
       }
-      return await signUp(dataToSend);
+      const res = await signUp(dataToSend);
+
+      if (res) {
+        router.replace('/track');
+      } else {
+        return false;
+      }
     },
   });
   const {

@@ -1,7 +1,7 @@
 
 export type Auth = {
   token: string | null;
-  signUp: (data: SignUpData) => Promise<void>;
+  signUp: (data: SignUpData) => Promise<boolean>;
   signIn: (token: string) => void;
   signOut: () => void;
 }

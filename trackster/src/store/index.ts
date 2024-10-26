@@ -23,13 +23,17 @@ const createAuthSlice: StateCreator<Store, [], [], Auth> = (set, get) => ({
       const res = await client.post<SignUpState>('/auth/signup', data);
       if (res.data.token) {
         set({ token: res.data.token });
+        return true;
       } else {
         errorNotification(true, 'Failed to sign up', new Error(res.data.error));
+        return false;
       }
     } catch (e) {
       errorNotification(true, 'Failed to sign up', e as unknown as Error);
+      return false;
+    } finally {
+      get().setIsLoading(false);
     }
-    get().setIsLoading(false);
   },
   signIn: async (token: string) => set({ token }),
   signOut: () => set({ token: null }),
