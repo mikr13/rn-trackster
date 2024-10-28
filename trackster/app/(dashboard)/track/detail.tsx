@@ -1,5 +1,7 @@
 
-import { StyleSheet, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,9 +13,9 @@ const styles = StyleSheet.create({
 
 const TrackDetailScreen = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text>Track Detail Screen</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

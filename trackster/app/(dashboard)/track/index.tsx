@@ -2,7 +2,9 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useStore } from '@/store';
-import { StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
+import { StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   container: {
@@ -16,13 +18,16 @@ const TrackListScreen = () => {
   const signOut = useStore(state => state.signOut);
   const token = useStore(state => state.token);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text>Track List Screen</Text>
       <Text>{token}</Text>
+      <Button variant="secondary" onPress={() => router.push('/track/create')}>
+        <Text>Go to Create Track</Text>
+      </Button>
       <Button onPress={() => signOut()}>
         <Text>Logout</Text>
       </Button>
-    </View>
+    </SafeAreaView>
   );
 }
 
