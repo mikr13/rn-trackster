@@ -5,12 +5,13 @@ import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import { Large, P } from '@/components/ui/typography';
 import { useDataFetching } from '@/hooks/useDataFetching';
-import { isAuthenticated, useStore } from '@/store';
+import { useStore } from '@/store';
 import { authSchema } from '@/utils/auth';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
+import React from 'react';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import z from 'zod';
 
@@ -49,12 +50,6 @@ const schema = authSchema.extend({
 type SignUpForm = z.infer<typeof schema>;
 
 const SignUpScreen = () => {
-  const isAuth = isAuthenticated();
-
-  if (isAuth) {
-    return router.replace('/track');
-  };
-
   const signUp = useStore(store => store.signUp)
   const { isError, error, isPending, mutate } = useMutation({
     mutationFn: async (data: SignUpForm) => {
@@ -81,7 +76,7 @@ const SignUpScreen = () => {
   })
   const onSubmit: SubmitHandler<SignUpForm> = (data) => mutate(data);
 
-  useDataFetching({ isError, error, errorMessage: `Failed to sign up!` });
+  useDataFetching({ isError, error, errorMessage: "Failed to sign up!" });
 
   return (
     <View style={styles.container}>

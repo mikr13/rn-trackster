@@ -9,7 +9,8 @@ import { useStore } from '@/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
+import React from 'react';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
@@ -81,7 +82,7 @@ const AccountScreen = () => {
 
   const onSubmit: SubmitHandler<ChangePasswordForm> = (data) => mutate(data);
 
-  useDataFetching({ isError, error, errorMessage: `Failed to change password!` });
+  useDataFetching({ isError, error, errorMessage: "Failed to change password!" });
 
   return (
     <View style={styles.container}>

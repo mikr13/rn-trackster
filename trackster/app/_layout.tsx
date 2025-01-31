@@ -10,14 +10,35 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 
+const FONTS: Theme["fonts"] = {
+  regular: {
+    fontFamily: 'Inter_400Regular',
+    fontWeight: 'normal',
+  },
+  medium: {
+    fontFamily: 'Inter_500Medium',
+    fontWeight: 'normal',
+  },
+  bold: {
+    fontFamily: 'Inter_700Bold',
+    fontWeight: 'normal',
+  },
+  heavy: {
+    fontFamily: 'Inter_800ExtraBold',
+    fontWeight: 'normal',
+  },
+}
+
 const LIGHT_THEME: Theme = {
   dark: false,
   colors: NAV_THEME.light,
+  fonts: FONTS
 };
 
 const DARK_THEME: Theme = {
   dark: true,
   colors: NAV_THEME.dark,
+  fonts: FONTS
 };
 
 export {

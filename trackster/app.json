@@ -1,5 +1,5 @@
 {
-  "schema": "com.mikr13.trackster",
+  "scheme": "com.mikr13.trackster",
   "name": "trackster",
   "slug": "trackster",
   "version": "1.0.0",
@@ -21,6 +21,7 @@
       "backgroundColor": "#ffffff"
     }
   },
+  "newArchEnabled": true,
   "plugins": [
     "expo-router",
     [

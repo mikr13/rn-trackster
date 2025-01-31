@@ -15,13 +15,13 @@ export const ReactQueryProvider = ({ children }: Props) => {
       }
     },
     queryCache: new QueryCache({
-      onError: (error: any) => {
-        console.error(JSON.stringify(error));
+      onError: (error: unknown) => {
+        console.error(error);
       },
     }),
     mutationCache: new MutationCache({
-      onError: (error: any) => {
-        console.error(JSON.stringify(error));
+      onError: (error: unknown) => {
+        console.error(error);
       },
     }),
   });

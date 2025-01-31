@@ -16,6 +16,7 @@ function Skeleton({
 }: Omit<React.ComponentPropsWithoutRef<typeof Animated.View>, 'style'>) {
   const sv = useSharedValue(1);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: no need
   React.useEffect(() => {
     sv.value = withRepeat(
       withSequence(withTiming(0.5, { duration }), withTiming(1, { duration })),
